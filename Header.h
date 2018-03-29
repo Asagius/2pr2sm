@@ -2,6 +2,8 @@
 #ifndef HEADER_H_
 #define HEADER_H_
 
+bool check(std::vector<int> &, int); // search copies
+
 typedef struct Node // Structure
 {
     Node *next;
@@ -24,7 +26,7 @@ public:
 
     ~List();
 
-    List(const List &);
+    //List(const List &);
 
     List &operator=(const List &);
 
@@ -72,7 +74,6 @@ public:
 
     void del_repeat();
 
-    bool check(std::vector<int> &, int); // search copies
 
 private:
     Node *head;

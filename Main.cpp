@@ -2,6 +2,7 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <vld.h>
 #include "Header.h"
 
 int main() {
@@ -10,9 +11,10 @@ int main() {
 
     vect.add_first(1);
     vect.add_last(2);
-    vect.add_last(2);
-    vect.add_last(2);
-    vect.add_last(2);
+    vect.add_last(3);
+    vect.add_last(4);
+    vect.add_last(5);
+	vect2.add_first(1);
     
     while (1) {
         std::cin >> choice;
@@ -21,7 +23,7 @@ int main() {
                 vect.show();
                 break;
             case 2: // Data adding
-                vect.add_first(5);
+                vect.add_first(-1);
                 break;
             case 3: // Data deleting
                 int a, b;
@@ -46,11 +48,14 @@ int main() {
                     std::cout << "The first list is smaller than the second one." << std::endl;
                 break;
             case 7: // List sum
-                vect + vect2;
+                vect3 = vect + vect2;
                 break;
             case 8: // Deleting iterative values
                 vect.del_repeat();
                 break;
+			case 9: // List showing
+				vect3.show();
+				break;
             case 13: {
                 return (0);
             }

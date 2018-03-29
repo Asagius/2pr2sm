@@ -2,6 +2,7 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <vld.h>
 #include "Header.h"
 
 
@@ -67,24 +68,25 @@ void List::add(int n, int v) // adding at the #n place v value
         this->tail->prev = NULL;
         new_element->value = v;
     } else {
-        if (n <= 1) //begining
+        if (n == 1) //begining
         {
             new_element->next = this->head;
             this->head = new_element;
             new_element->value = v;
         } else {
-            if (n < this->size) {
+            if (n <= this->size) {
                 Node *temp = this->head;
                 for (int i = 0; i < n - 1; i++) {
                     temp = temp->next;
                 }
                 new_element->prev = temp->prev;
                 temp->prev->next = new_element;
-                new_element->next = temp->next;
-                temp->next = new_element;
+                new_element->next = temp;
+				temp->prev = new_element;
+            //    temp->next = new_element;
                 new_element->value = v;
             } else { //end
-                if (n = this->size) {
+                if (n == this->size +1) {
                     this->tail->next = new_element;
                     new_element->next = NULL;
                     this->tail = new_element;
@@ -129,14 +131,15 @@ void List::del(int n) // Delete elements from the n place
             Node *temp = this->head;
             if (this->size == 1) {
                 delete temp;
-                this->head = 0;
-                this->tail = 0;
+                this->head = NULL;
+                this->tail = NULL;
                 this->size = 0;
             } else {
                 Node *temp_2;
                 if (n == 1) {//1 place
                     temp_2 = this->head;
                     this->head = this->head->next;
+					this->head->prev = NULL;
                     delete temp_2;
                 } else {
                     if (n == 2) {//2 place
@@ -145,25 +148,24 @@ void List::del(int n) // Delete elements from the n place
                         temp_2->next->prev = this->head;
                         delete temp_2;
                     } else {
-                        if (n == size - 1) {//end
+                        if (n == size) {//end
                             temp = this->tail;
+							temp->next = NULL;
                             this->tail = temp->prev;
                             delete temp;
                         } else {
-                            if (size - 2) {//before end
-                                temp = this->tail;
-                                temp = temp->prev;
-                                temp->prev->next = this->tail;
-                                this->tail = temp->prev;
+                            if (n == size - 1) {//before end
+                                temp = this->tail->prev;
+								temp->prev->next = this->tail;
+                                this->tail->prev = temp->prev;
                                 delete temp;
                             } else {// Other
                                 for (int i = 0; i < n - 2; i++) {
                                     temp = temp->next;
                                 }
-                                temp_2 = temp->next;
-                                temp->next->prev = temp_2->next;
-                                temp_2 -> prev = temp;
-                                delete temp_2;
+                                temp->prev->next = temp->next;
+                                temp->next->prev = temp->prev;
+                                delete temp;
                             }
                         }
                     }
@@ -256,10 +258,11 @@ List &List::operator=(const List &second) {  //copy
     if (*this != second) {      //exist?
         this->del_all();
         if (second.head != NULL) {
-            this->head = new Node;
+			 this->head = new Node;
             Node *temp_1 = this->head;
             Node *temp_2 = second.head;
-            for (int i = 1; i < second.getsize(); i++) {
+            for (int i = 1; i <= second.getsize(); i++) {
+//				std::cout << temp_1->value << " " << temp_2->value;
                 temp_1->value = temp_2->value;
                 temp_1->next = new Node;
                 temp_1->prev = temp_1;
@@ -284,7 +287,10 @@ List List::operator+(const List &second) const {
         List func_list;
         Node *temp;
         temp = this->head;
-        for (int i = 0; i < this->getsize(); i++) {
+
+		func_list.add_first(temp->value);
+		temp = temp->next;
+        for (int i = 1; i < this->getsize(); i++) {
             func_list.add_last(temp->value);
             temp = temp->next;
         }
